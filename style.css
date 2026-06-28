@@ -161,7 +161,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .quick-card__kicker {
   font-family: var(--sans);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gold-stage);
@@ -169,7 +169,7 @@ button { font-family: inherit; cursor: pointer; }
 .quick-card__title {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
