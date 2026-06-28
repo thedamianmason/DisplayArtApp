@@ -656,6 +656,13 @@
     }
   }
 
+  // Prev/next arrows only make sense while a slideshow is on screen — hide them
+  // on the quick-start landing and the empty state.
+  function setNavVisible(visible) {
+    els.prevBtn.hidden = !visible;
+    els.nextBtn.hidden = !visible;
+  }
+
   // ---- Slideshow engine ----------------------------------------------------
 
   function showSlide(pos) {
@@ -679,6 +686,7 @@
     els.viewOnDaBtn.hidden = false;
     updateShareTargets(d);
     renderLabelQr(d.url);
+    setNavVisible(true);
 
     if (d.collectionOwner && d.collectionOwner.toLowerCase() !== d.artist.toLowerCase()) {
       els.labelOwner.textContent = d.collectionOwner;
@@ -1026,6 +1034,7 @@
     els.artwork.classList.remove("is-visible");
     els.viewOnDaBtn.hidden = true; // no current piece to link to
     els.labelQr.hidden = true;
+    setNavVisible(false);
     current = null;
     updateShareTargets(null);
     if (labelMinimizeTimer) clearTimeout(labelMinimizeTimer);
@@ -1044,6 +1053,7 @@
     els.artwork.classList.remove("is-visible");
     els.viewOnDaBtn.hidden = true;
     els.labelQr.hidden = true;
+    setNavVisible(false);
     current = null;
     updateShareTargets(null);
     idleLanding = true;
