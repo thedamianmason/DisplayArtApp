@@ -15,7 +15,7 @@
   publish = "."
   functions = "netlify/functions"
 
-# Optional: override the allow-listed origins without touching code. The
-# function also has a sensible built-in default, so this is not required.
+# Set your site's origin so the proxy only answers calls from your own app.
+# (Prefer setting ALLOWED_ORIGINS in the Netlify dashboard env vars instead.)
 # [build.environment]
-#   ALLOWED_ORIGINS = "https://deviantartmuseumdisplay.netlify.app,http://localhost:8000"
+#   ALLOWED_ORIGINS = "https://your-site.netlify.app,http://localhost:8000"
