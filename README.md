@@ -134,6 +134,14 @@ independent. Without these env vars, signed-out API calls go out anonymously and
 DeviantArt rejects them — the app simply prompts visitors to sign in. Nothing
 breaks.
 
+> **Prefer a single app?** You can use **one Confidential app** for *both* login
+> and signed-out browsing. Point `config.js` `CLIENT_ID` at the Confidential
+> app, give it the `…/callback.html` redirect URI, and set the env vars above to
+> that same app. The proxy authenticates the login token-exchange with the
+> secret for you (server-side — it never reaches the browser). With this setup
+> the env vars are **required**, since the Confidential login won't complete
+> without the secret.
+
 ### Run locally (optional)
 
 Serve the folder over `http://localhost:8000` (e.g. `python -m http.server

@@ -104,6 +104,20 @@ async function handleToken(request, allowOrigin) {
     );
   }
 
+  // If the app is a Confidential client, DeviantArt requires the token exchange
+  // to be authenticated with the client_secret. The browser can't hold the
+  // secret (it's a public PKCE flow on the client), so inject it server-side —
+  // but ONLY when the request is for our own client_id, so we never attach our
+  // secret to a token request for some other client. Harmless for a Public app:
+  // DA_CLIENT_SECRET is simply unset, so nothing is injected.
+  if (
+    process.env.DA_CLIENT_SECRET &&
+    form.get("client_id") &&
+    form.get("client_id") === process.env.DA_CLIENT_ID
+  ) {
+    form.set("client_secret", process.env.DA_CLIENT_SECRET);
+  }
+
   let upstream;
   try {
     upstream = await fetch(TOKEN_URL, {
