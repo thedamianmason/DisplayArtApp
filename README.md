@@ -113,20 +113,26 @@ Commit and let Netlify redeploy. Sign in — you should be able to load artwork.
 ### 4. (Optional) Signed-out public browsing
 
 To let visitors view public sources (Daily Deviations, tags, public galleries)
-**without** signing in, give the proxy a client-credentials app token:
+**without** signing in, the proxy mints a server-side **client-credentials**
+token. Important catch: DeviantArt only issues a **client secret** to a
+**Confidential** app — but your login app (step 1) must be **Public** (a browser
+can't safely hold a secret; PKCE replaces it). These two flows therefore use
+**two separate apps**:
 
-1. In your DeviantArt app settings, find the **client secret**. (It's on the
-   app's edit screen, below the Client ID. Not every app is authorized for the
-   `client_credentials` grant — if minting fails with `unauthorized_client`,
-   the app needs that grant enabled/approved by DeviantArt.)
+1. Register a **second** DeviantArt app and set its type to **Confidential**.
+   Note its **Client ID** and **Client Secret**. (The `client_credentials`
+   grant doesn't use redirect URIs, so this app needs no whitelist. It's used
+   *only* by the server — never in the browser.)
 2. In Netlify → **Site configuration → Environment variables**, add:
-   - `DA_CLIENT_ID` = your Client ID
-   - `DA_CLIENT_SECRET` = your client secret
+   - `DA_CLIENT_ID` = the **Confidential** app's Client ID
+   - `DA_CLIENT_SECRET` = the **Confidential** app's Client Secret
    - `ALLOWED_ORIGINS` = `https://your-site.netlify.app` (your site's origin)
 3. Trigger a redeploy.
 
-Without these, signed-out API calls go out anonymously and DeviantArt rejects
-them — the app simply prompts visitors to sign in instead. Nothing breaks.
+Your Public login app (`config.js`) and this Confidential token app are
+independent. Without these env vars, signed-out API calls go out anonymously and
+DeviantArt rejects them — the app simply prompts visitors to sign in. Nothing
+breaks.
 
 ### Run locally (optional)
 
