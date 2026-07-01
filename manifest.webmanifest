@@ -1,6 +1,6 @@
 {
-  "name": "Gallery Wall — DeviantArt Slideshow",
-  "short_name": "Gallery Wall",
+  "name": "DisplayArt — DeviantArt Slideshow",
+  "short_name": "DisplayArt",
   "description": "A fullscreen, museum-style slideshow for DeviantArt artwork.",
   "id": "/",
   "start_url": "./",

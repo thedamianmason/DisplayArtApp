@@ -1,10 +1,10 @@
-// Service worker for the Gallery Wall PWA.
+// Service worker for the DisplayArt PWA.
 // Strategy: network-first for the same-origin app shell (so updates land
 // immediately when online), falling back to cache when offline. API/token
 // requests and cross-origin requests (DeviantArt images, the proxy) are never
 // cached — they always go straight to the network.
 
-const CACHE = "gallery-wall-v3";
+const CACHE = "displayart-v4";
 const SHELL = [
   "./",
   "./index.html",

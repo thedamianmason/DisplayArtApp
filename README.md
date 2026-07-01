@@ -1,6 +1,6 @@
-# Gallery Wall — a museum-style DeviantArt slideshow
+# DisplayArt — a museum-style DeviantArt slideshow
 
-Turn any screen into a quiet, fullscreen gallery wall. Gallery Wall pulls
+Turn any screen into a quiet, fullscreen gallery wall. DisplayArt pulls
 artwork from [DeviantArt](https://www.deviantart.com) and shows it as a
 slow, museum-style slideshow — each piece framed on a dark stage with a
 wall label (title, artist, medium, tags) and an optional scan-to-view QR
