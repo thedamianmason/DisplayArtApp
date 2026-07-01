@@ -10,12 +10,13 @@
   "background_color": "#0c0b0a",
   "theme_color": "#0c0b0a",
   "categories": ["entertainment", "photo", "lifestyle"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "./icon-192.png",

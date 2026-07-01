@@ -15,6 +15,22 @@
   publish = "."
   functions = "netlify/functions"
 
+# If you package this as a native app store listing (PWABuilder, Bubblewrap),
+# those tools fetch the manifest and icons cross-origin from their own domain
+# to inspect pixel dimensions and maskable safe zones. Without CORS headers
+# that fetch is blocked even though the files are publicly reachable — these
+# are public, non-sensitive static assets, so an open Access-Control-Allow-Origin
+# is safe here.
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/icon*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 # Set your site's origin so the proxy only answers calls from your own app.
 # (Prefer setting ALLOWED_ORIGINS in the Netlify dashboard env vars instead.)
 # [build.environment]
