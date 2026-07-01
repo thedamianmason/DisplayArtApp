@@ -258,6 +258,38 @@
     </div>
   </aside>
 
+  <!-- Mature-content consent gate: shown the first time someone tries to turn
+       the "Allow mature content" toggle on. Requires an explicit age/consent
+       checkbox before the setting can take effect. -->
+  <div id="matureConsentOverlay" class="modal-overlay" hidden>
+    <div
+      id="matureConsentDialog"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="matureConsentTitle"
+      aria-describedby="matureConsentDesc"
+      tabindex="-1"
+    >
+      <h2 id="matureConsentTitle">Mature content warning</h2>
+      <p id="matureConsentDesc">
+        Turning this on allows mature-rated artwork to appear in the
+        slideshow. This may include nudity, sexual themes, graphic violence,
+        or other adult material. It only appears if mature content is also
+        allowed on the DeviantArt account you're signed in with.
+      </p>
+      <label class="field field--row modal__consent-row">
+        <input type="checkbox" id="matureConsentCheckbox" />
+        <span>I confirm I am at least 18 years old (or the age of majority
+        where I live) and want to see mature content.</span>
+      </label>
+      <div class="modal__actions">
+        <button type="button" id="matureConsentCancel" class="btn btn--ghost">Cancel</button>
+        <button type="button" id="matureConsentConfirm" class="btn" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="api.js"></script>

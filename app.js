@@ -77,6 +77,12 @@
     shareLinks: document.getElementById("shareLinks"),
     shareDeviceBtn: document.getElementById("shareDeviceBtn"),
     shareStatus: document.getElementById("shareStatus"),
+
+    matureConsentOverlay: document.getElementById("matureConsentOverlay"),
+    matureConsentDialog: document.getElementById("matureConsentDialog"),
+    matureConsentCheckbox: document.getElementById("matureConsentCheckbox"),
+    matureConsentCancel: document.getElementById("matureConsentCancel"),
+    matureConsentConfirm: document.getElementById("matureConsentConfirm"),
   };
 
   // ---- State ----------------------------------------------------
@@ -602,7 +608,114 @@
     }
   }
 
-  els.matureToggle.addEventListener("change", reapplyFilters);
+  // ---- Mature-content consent gate ----------------------------------------------------
+  // Shown the first time someone tries to turn "Allow mature content" on; requires an
+  // explicit age/consent checkbox before the setting takes effect. Declining (or
+  // dismissing) leaves the toggle off with no side effects, and the gate is skipped on
+  // every later attempt once consent has been given.
+
+  const MATURE_CONSENT_KEY = "da_mature_consent_v1";
+  let lastFocusedBeforeMatureGate = null;
+
+  function hasMatureConsent() {
+    try {
+      return localStorage.getItem(MATURE_CONSENT_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function grantMatureConsent() {
+    try {
+      localStorage.setItem(MATURE_CONSENT_KEY, "1");
+    } catch {
+      /* ignore storage failures (e.g. private browsing) — gate will just reappear next time */
+    }
+  }
+
+  function getFocusableInMatureGate() {
+    return Array.from(
+      els.matureConsentDialog.querySelectorAll('button, input, [href], [tabindex]:not([tabindex="-1"])')
+    ).filter((el) => !el.disabled && el.offsetParent !== null);
+  }
+
+  function openMatureGate() {
+    lastFocusedBeforeMatureGate = document.activeElement;
+    els.matureConsentCheckbox.checked = false;
+    els.matureConsentConfirm.disabled = true;
+    els.matureConsentOverlay.hidden = false;
+    // Remove the rest of the app from the accessibility tree entirely — the Tab-trap
+    // below only intercepts the Tab key, but screen readers' own virtual-cursor
+    // navigation (NVDA/JAWS browse mode, VoiceOver rotor) ignores Tab order and would
+    // otherwise still be able to read into the settings panel behind this dialog.
+    els.stage.inert = true;
+    els.panel.inert = true;
+    const focusable = getFocusableInMatureGate();
+    (focusable[0] || els.matureConsentDialog).focus();
+  }
+
+  function closeMatureGate() {
+    els.matureConsentOverlay.hidden = true;
+    els.stage.inert = false;
+    els.panel.inert = false;
+    (lastFocusedBeforeMatureGate || els.matureToggle).focus();
+  }
+
+  els.matureConsentCheckbox.addEventListener("change", () => {
+    els.matureConsentConfirm.disabled = !els.matureConsentCheckbox.checked;
+  });
+
+  els.matureConsentCancel.addEventListener("click", () => {
+    closeMatureGate(); // matureToggle is already unchecked — nothing else to undo
+  });
+
+  els.matureConsentConfirm.addEventListener("click", () => {
+    if (!els.matureConsentCheckbox.checked) return; // belt-and-suspenders; button stays disabled until checked
+    grantMatureConsent();
+    closeMatureGate();
+    els.matureToggle.checked = true;
+    reapplyFilters();
+  });
+
+  // Stop every click inside the gate (backdrop, dialog, buttons) from reaching the
+  // document-level "click outside closes the settings panel" listener — the gate is a
+  // nested layer, not something outside the panel. Clicking the dimmed backdrop itself
+  // (not the dialog card) cancels the gate, same as the panel's own outside-click-to-close.
+  els.matureConsentOverlay.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (e.target === els.matureConsentOverlay) closeMatureGate();
+  });
+
+  // Escape cancels the gate without also closing the settings panel behind it; Tab is
+  // trapped within the dialog while it's open.
+  els.matureConsentOverlay.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      closeMatureGate();
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const focusable = getFocusableInMatureGate();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  els.matureToggle.addEventListener("change", () => {
+    if (els.matureToggle.checked && !hasMatureConsent()) {
+      els.matureToggle.checked = false; // revert optimistically; the gate decides the real value
+      openMatureGate();
+      return;
+    }
+    reapplyFilters();
+  });
   els.aiToggle.addEventListener("change", reapplyFilters);
 
   function commitSpeed() {

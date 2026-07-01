@@ -686,8 +686,8 @@ input[type="checkbox"] {
 }
 .btn--ghost:hover { background: rgba(0,0,0,0.05); }
 
-/* For ghost buttons that sit on the dark stage (e.g. the mature-content
-   gate) rather than the paper panel — needs light text/border instead. */
+/* For ghost buttons that sit on the dark stage rather than the paper panel —
+   needs light text/border instead. */
 .btn--ghost-stage {
   background: transparent;
   color: var(--paper);
@@ -696,6 +696,70 @@ input[type="checkbox"] {
   padding: 0.65rem 1.25rem;
 }
 .btn--ghost-stage:hover { background: rgba(237, 232, 222, 0.12); }
+
+/* ───────────────────────── Mature-content consent gate ───────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(12, 11, 10, 0.6);
+}
+
+.modal {
+  width: 26rem;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+  font-family: var(--sans);
+}
+
+.modal h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.3rem;
+  margin: 0 0 0.75rem;
+}
+
+.modal p {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin: 0 0 1.1rem;
+}
+
+.modal__consent-row {
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+.modal__consent-row > span { font-size: 0.85rem; color: var(--ink); }
+
+.modal__actions {
+  display: flex;
+  gap: 0.6rem;
+}
+.modal__actions .btn { width: auto; flex: 1 1 auto; margin-top: 0; }
+
+.modal .btn:disabled {
+  background: var(--ink-soft);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.modal:focus-visible,
+.modal__actions .btn:focus-visible,
+.modal__consent-row input:focus-visible {
+  outline: 3px solid var(--gold-ink);
+  outline-offset: 2px;
+}
 
 /* Prominent sign-in CTA shown on the signed-out landing. White card with dark
    text so it reads clearly against the near-black stage. Must come after .btn
